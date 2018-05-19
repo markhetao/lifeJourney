@@ -1,15 +1,8 @@
    //1.搜索所有信息
-    $("#getData").click(function(){
-    	var anthor = $("#txtVal").val().trim();
-        //非空判断
-        if(!anthor){
-        	alert("请输入钱包地址");
-        	return false;
-        }
-        location.href='path_road.html?author='+anthor;
-    });
+    var page = 1;
+    var barrList=[];
+    var itemTime =null;
     function getData(){
-    	var page =1;
         console.log("最新信息页码:"+page);
         if(!page || page ===0){
              alert('请输入最新数据有效页码');
@@ -37,22 +30,20 @@
             console.log("error:"+err.message);
         })
     }
-	getData();
     function cbSearchNew(resp){
         var result = resp.result;
         console.log("result:"+JSON.stringify(result));
         if(result === 'null'){
-            // $(".result").addClass("hide");
-            // $(".birthSay").removeClass("hide");
         }else{
             try{
               result = JSON.parse(result);
               if(isArray(result)) {
-              	for(var i = 0;i<result.length;i++){
-          			var item = {
-						info:result[i]
-					}
-          			$('#dancon').barrager(item);
+              	if(result.length>0){
+              		barrList =barrList.concat(result);
+              		page=page+1;
+              		getData();
+              		clearInterval(itemTime);
+              		insertBarrage();
               	}
           	}else{
 		            alert(result);
@@ -62,3 +53,33 @@
             }
         }
     };
+	function insertBarrage(){
+		var idx = 0;
+		itemTime = setInterval(function(){
+			var len = barrList.length;
+			idx+=1;
+			if(idx>len){
+				idx=0;
+			}
+			var item = {
+				info:barrList[idx]
+			}
+			var blen = $("#dancon>.barrage").length;
+			if(blen<20){
+				$('#dancon').barrager(item);
+			}
+		},600)
+	}
+	
+	$(function(){
+		getData();
+		$("#getData").click(function(){
+	    	var anthor = $("#txtVal").val().trim();
+	        //非空判断
+	        if(!anthor){
+	        	alert("请输入钱包地址");
+	        	return false;
+	        }
+	        location.href='path_road.html?author='+anthor;
+	    });
+	});

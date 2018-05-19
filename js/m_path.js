@@ -37,12 +37,14 @@
               if(isArray(result)) {
               	for(var i = 0;i<result.length;i++){
               		var len =newArr.length;
+              		flag = true;
           			for(var j = 0;j<newArr.length;j++){
               			if(result[i].age==newArr[j].age){
               				newArr[j]=result[i];
               				flag = false;
               			}
-              		}
+              			
+          			}
               		if(flag){
               			newArr.push(result[i]);
               		}
@@ -156,6 +158,12 @@
     		$("#pathHappy").removeClass("errbor");
     	}
     	if(!title){
+    		$("#pathTitle").addClass("errbor");
+    		return false;
+    	}else{
+    		$("#pathTitle").removeClass("errbor");
+    	}
+    	if(title.length>10){
     		$("#pathTitle").addClass("errbor");
     		return false;
     	}else{
